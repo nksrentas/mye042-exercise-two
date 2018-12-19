@@ -1,0 +1,47 @@
+.row.top_row
+  .col-sm-6.user_att
+    %h2= @user.email
+    - if @user.avatar_file_name
+      = image_tag @user.avatar.url(:thumb)
+  .col-sm-6
+    = link_to 'Logout', log_out_path, class: ['btn', 'btn-danger', 'logout_btn']
+  .row
+    = link_to 'Add Photo', new_user_photo_path(@user), class: ['btn', 'btn-success', 'add_photo_btn']
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+%br/
+.row
+  - @users.each  do |user|
+    .well.col-sm-4
+      %p 
+        = user.email
+      %p
+        - if @user.id != user.id
+          - if @user.following?(user)
+            = button_to "Unfollow", follow_path(current_user: @user, user_id: user.id), method: :delete, :class => "btn btn-primary"
+          - else
+            = button_to "Follow", follows_path(current_user: @user, user_id: user.id), :class => "btn btn-primary"
+.row
+  - @my_photos.each  do |userPhotos|
+    .well.row
+      .row
+        .well.col-sm-4
+          %h3
+            = userPhotos[0].title
+          = image_tag userPhotos[0].image.url(:medium)
+      .row
+        - userPhotos.each_with_index do |up, i|
+          - if i != 0
+            .well.col-sm-4
+              %h3
+                = up.title
+              = image_tag up.image.url(:medium)
+
+          
