@@ -5,7 +5,8 @@ class CommentsController < ApplicationController
 
 	def new
 		@comment = Comment.new
-		@temp = params[:user_id]
+		@user_id = params[:user_id]
+		@photo_id = params[:photo_id]
 	end
 
 	def show

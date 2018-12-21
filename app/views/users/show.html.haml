@@ -37,7 +37,8 @@
         .well.col-sm-11
           %h3.caption
             = @my_photos[index][0].title
-          = image_tag @my_photos[index][0].image.url(:medium), :class => "slide"
+          / = image_tag @my_photos[index][0].image.url(:medium), :class => "slide"
+          = link_to image_tag(@my_photos[index][0].image.url(:medium)), new_user_photo_comment_path(photo_id: @my_photos[index][0].id, user_id: @my_photos[index][0].user_id), :class => "slide", :data => {:photoId => @my_photos[index][0].id, :userId => @my_photos[index][0].user_id}
           %br/
           %br/
           %br/
@@ -48,7 +49,7 @@
               .well.col-sm-4
                 %h3
                   = i.title
-                = image_tag i.image.url(:medium)
+                = image_tag i.image.url(:medium), :data => {:photoId => i.id, :userId => i.user_id}
 
 
           
