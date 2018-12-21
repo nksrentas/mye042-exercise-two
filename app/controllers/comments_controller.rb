@@ -7,6 +7,8 @@ class CommentsController < ApplicationController
 		@comment = Comment.new
 		@user_id = params[:user_id]
 		@photo_id = params[:photo_id]
+		@currentComments = Comment.where(photo_id: params[:photo_id]).order("created_at DESC")
+		p @currentComments
 	end
 
 	def show

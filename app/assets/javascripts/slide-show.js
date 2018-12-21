@@ -1,7 +1,6 @@
 var SlideShow = {
   isOut: false,
   runSlide: function() {
-    console.log('EDW', $(this))
     isOut = false;
     var slidesNode = $(this).parent().children().last().find('img');
     var captionNode = $(this).parent().find(".caption");
@@ -18,7 +17,6 @@ var SlideShow = {
         //console.log(image.dataset.photoId, image.dataset.userId)
 
         imageNode.parent().data(image.dataset)        // Allagi ton data attribute kathe fora pou allazi h eikona
-        console.log(imageNode.parent().data())
         captionNode.text(titles[imageCounter].innerText);
       }
     }, 2000);
@@ -30,7 +28,6 @@ var SlideShow = {
     var userID = $(this).data('userid')
     var photosID = $(this).data('photoid')
     var oneFourth = Math.ceil($(window).width() / 4);
-    console.log(`/users/${userID}/photos/${photosID}/comments/new`)
     $.ajax({type: 'GET',
             url: `/users/${userID}/photos/${photosID}/comments/new`,
             timeout: 5000,
@@ -45,12 +42,16 @@ var SlideShow = {
            });
     return(false);
   },
+  hideComment: function() {
+    $('#commentModal').hide();
+    return(false);
+  },
   setup: function() {
     $(".slide")
       .mouseenter(SlideShow.runSlide)
       .mouseleave(SlideShow.stopSlide)
       .click(SlideShow.clickedSlide);
-
+      $('#closeButton').click(SlideShow.hideComment);
     var popupDiv = $('<div id="commentModal"></div>');
     popupDiv.hide().appendTo($('body'));
   }
