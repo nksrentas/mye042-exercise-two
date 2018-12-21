@@ -29,19 +29,26 @@
           - else
             = button_to "Follow", follows_path(current_user: @user, user_id: user.id), :class => "btn btn-primary"
 .row
-  - @my_photos.each  do |userPhotos|
+  -@my_users.each_with_index do |u, index|
     .well.row
+      %h1
+        = u.email
       .row
-        .well.col-sm-4
-          %h3
-            = userPhotos[0].title
-          = image_tag userPhotos[0].image.url(:medium)
-      .row
-        - userPhotos.each_with_index do |up, i|
-          - if i != 0
-            .well.col-sm-4
-              %h3
-                = up.title
-              = image_tag up.image.url(:medium)
+        .well.col-sm-11
+          %h3.caption
+            = @my_photos[index][0].title
+          = image_tag @my_photos[index][0].image.url(:medium), :class => "slide"
+          %br/
+          %br/
+          %br/
+          %hr/
+          %br/
+          .row.slides
+            - @my_photos[index].each do |i|
+              .well.col-sm-4
+                %h3
+                  = i.title
+                = image_tag i.image.url(:medium)
+
 
           

@@ -36,15 +36,6 @@ class UsersController < ApplicationController
         @my_photos.push(u.photos.order(created_at: :desc))
       end
     end
-  
-    # @my_comments = []
-    # @final_photos.each do |f|
-    #   @my_comments.push(f.comments)
-    # end
-
-    # Pernw oles tis photo
-    #@my_photos = Photo.order(created_at: :desc).all
- 
 
     @tag = Tag.new
   end
