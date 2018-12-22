@@ -1,15 +1,15 @@
 var timer;
+var isOut = false;
+var cancelPress = false;
 var SlideShow = {
   clickTimer: 0,
   clickDelay: 200,
   clickPrevent: false,
-  isOut: false,
-  cancelPress: false,
   runSlide: function() {
-    if (SlideShow.cancelPress) {
-      return // eimai mesa sto modal ara den sinexizo to slide show
+    if (cancelPress) {
+      return; // eimai mesa sto modal ara den sinexizo to slide show
     }
-    SlideShow.isOut = false
+    isOut = false;
     var slidesNode = $(this)
       .parent()
       .children()
@@ -26,8 +26,8 @@ var SlideShow = {
     var image,
       imageCounter = 0;
     timer = setInterval(function() {
-      //console.log('Check',SlideShow.isOut,SlideShow.cancelPress)
-      if (!SlideShow.isOut && !SlideShow.cancelPress) {
+      //console.log('Check',isOut,cancelPress)
+      if (!isOut && !cancelPress) {
         imageCounter = (imageCounter + 1) % slides.length;
         image = slides[imageCounter];
         imageNode.attr("src", image.src);
@@ -39,14 +39,19 @@ var SlideShow = {
   stopSlide: function() {
     if (timer !== false) {
       clearInterval(timer);
-      SlideShow.isOut = true;
-      //console.log('stopSlide',SlideShow.isOut,SlideShow.cancelPress)
+      isOut = true;
+      //console.log('stopSlide',isOut,cancelPress)
     }
   },
   clickedSlide: function(node) {
     var userID = node.data("userid");
     var photosID = node.data("photoid");
     var oneFourth = Math.ceil($(window).width() / 4);
+    if (timer !== false) {
+      clearInterval(timer);
+      cancelPress = true;
+    }
+    console.log("Click => ", isOut, cancelPress);
     $.ajax({
       type: "GET",
       url: `/users/${userID}/photos/${photosID}/comments/new`,
@@ -64,12 +69,8 @@ var SlideShow = {
           })
           .html(data)
           .show();
-
-        clearInterval(timer);
-        SlideShow.isOut = true;
-        SlideShow.cancelPress = true;
-        //console.log('Click',SlideShow.isOut,SlideShow.cancelPress)
-          
+cancelPress = true;
+        console.log('Click',isOut,cancelPress)
       },
       error: function(xhrObj, textStatus, exception) {
         alert("Error!");
@@ -82,26 +83,31 @@ var SlideShow = {
     var photosID = node.data("photoid");
     $.ajax({
       url: `/users/${userID}/photos/${photosID}`,
-      type: 'DELETE',
+      type: "DELETE",
       success: function(result) {
-          console.log('Image deleted!')
-    },
-    error: function(xhrObj, textStatus, exception) {
-      alert("Error!");
-    }
-  });
+        console.log("Image deleted!");
+      },
+      error: function(xhrObj, textStatus, exception) {
+        alert("Error!");
+      }
+    });
   },
   hideComment: function() {
     if (timer !== false) {
       clearInterval(timer);
-      SlideShow.cancelPress = false;
-      $("#commentModal").hide();    
-      //console.log(SlideShow.isOut,SlideShow.cancelPress)
+      cancelPress = false;
+      $("#commentModal").hide();
+      //console.log(isOut,cancelPress)
     }
     return false;
   },
   submitComment: function(event) {
     event.preventDefault();
+    if (timer !== false) {
+      clearInterval(timer);
+      cancelPress = false;
+      console.log("Click ===>", isOut, cancelPress);
+    }
     $.ajax({
       type: "POST",
       url: $(this).attr("action"),
