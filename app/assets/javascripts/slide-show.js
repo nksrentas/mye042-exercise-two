@@ -1,8 +1,5 @@
 var timer;
 var SlideShow = {
-  clickTimer: 0,
-  clickDelay: 200,
-  clickPrevent: false,
   isOut: false,
   cancelPress: false,
   runSlide: function() {
@@ -78,9 +75,9 @@ var SlideShow = {
     return false;
   },
   doubleClicked: function(e) {
-    var userID = e.target.parentNode.dataset.userid;
-    var photosID = e.target.parentNode.dataset.photoid;
-    //console.log(userID, photosID);
+    var userID = e.target.dataset.userid;
+    var photosID = e.target.dataset.photoid;
+    console.log(e.target);
   },
   hideComment: function() {
     if (timer !== false) {
@@ -105,20 +102,7 @@ var SlideShow = {
     $(".slide")
       .mouseenter(SlideShow.runSlide)
       .mouseleave(SlideShow.stopSlide)
-      .on("click", function(e) {
-        e.preventDefault();
-        SlideShow.clickTimer = setTimeout(function() {
-          if (!SlideShow.clickPrevent) {
-            SlideShow.clickedSlide();
-          }
-          SlideShow.clickPrevent = false;
-        }, SlideShow.clickDelay);
-      })
-      .on("dblclick", function(e) {
-        clearTimeout(SlideShow.clickTimer);
-        SlideShow.clickPrevent = true;
-        SlideShow.doubleClicked(e);
-      });
+      .click(SlideShow.clickedSlide);
 
     $("#closeButton").click(SlideShow.hideComment);
 
