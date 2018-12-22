@@ -51,7 +51,7 @@ var SlideShow = {
       clearInterval(timer);
       cancelPress = true;
     }
-    console.log("Click => ", isOut, cancelPress);
+    // console.log("Click => ", isOut, cancelPress);
     $.ajax({
       type: "GET",
       url: `/users/${userID}/photos/${photosID}/comments/new`,
@@ -69,8 +69,8 @@ var SlideShow = {
           })
           .html(data)
           .show();
-cancelPress = true;
-        console.log('Click',isOut,cancelPress)
+        cancelPress = true;
+        // console.log("Click", isOut, cancelPress);
       },
       error: function(xhrObj, textStatus, exception) {
         alert("Error!");
@@ -106,7 +106,7 @@ cancelPress = true;
     if (timer !== false) {
       clearInterval(timer);
       cancelPress = false;
-      console.log("Click ===>", isOut, cancelPress);
+      // console.log("Click ===>", isOut, cancelPress);
     }
     $.ajax({
       type: "POST",
