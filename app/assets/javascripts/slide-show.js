@@ -1,5 +1,8 @@
 var timer;
 var SlideShow = {
+  clickTimer: 0,
+  clickDelay: 200,
+  clickPrevent: false,
   isOut: false,
   cancelPress: false,
   runSlide: function() {
@@ -40,9 +43,9 @@ var SlideShow = {
       //console.log('stopSlide',SlideShow.isOut,SlideShow.cancelPress)
     }
   },
-  clickedSlide: function() {
-    var userID = $(this).data("userid");
-    var photosID = $(this).data("photoid");
+  clickedSlide: function(node) {
+    var userID = node.data("userid");
+    var photosID = node.data("photoid");
     var oneFourth = Math.ceil($(window).width() / 4);
     $.ajax({
       type: "GET",
@@ -74,10 +77,19 @@ var SlideShow = {
     });
     return false;
   },
-  doubleClicked: function(e) {
-    var userID = e.target.dataset.userid;
-    var photosID = e.target.dataset.photoid;
-    console.log(e.target);
+  doubleClicked: function(node) {
+    var userID = node.data("userid");
+    var photosID = node.data("photoid");
+    $.ajax({
+      url: `/users/${userID}/photos/${photosID}`,
+      type: 'DELETE',
+      success: function(result) {
+          console.log('Image deleted!')
+    },
+    error: function(xhrObj, textStatus, exception) {
+      alert("Error!");
+    }
+  });
   },
   hideComment: function() {
     if (timer !== false) {
@@ -102,7 +114,22 @@ var SlideShow = {
     $(".slide")
       .mouseenter(SlideShow.runSlide)
       .mouseleave(SlideShow.stopSlide)
-      .click(SlideShow.clickedSlide);
+      .on("click", function(e) {
+        e.preventDefault();
+        let node = $(this);
+        SlideShow.clickTimer = setTimeout(function() {
+          if (!SlideShow.clickPrevent) {
+            SlideShow.clickedSlide(node);
+          }
+          SlideShow.clickPrevent = false;
+        }, SlideShow.clickDelay);
+      })
+      .on("dblclick", function(e) {
+        let node = $(this);
+        clearTimeout(SlideShow.clickTimer);
+        SlideShow.clickPrevent = true;
+        SlideShow.doubleClicked(node);
+      });
 
     $("#closeButton").click(SlideShow.hideComment);
 
