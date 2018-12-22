@@ -20,7 +20,9 @@ class CommentsController < ApplicationController
 		@comment.photo_id = params[:photo_id]
 		@comment.user_id = params[:user_id]
 		@comment.save
-		redirect_to user_path(id: params[:user_id])
+
+		format.html {redirect_to user_path(id: params[:user_id])}
+		
 	end
 	private 
 	def comment_params
